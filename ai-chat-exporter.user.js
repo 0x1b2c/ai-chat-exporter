@@ -1,10 +1,13 @@
 // ==UserScript==
 // @name         ChatGPT / Claude / Copilot / Gemini / Grok AI Chat Exporter by RevivalStack
-// @namespace    https://github.com/revivalstack/chatgpt-exporter
+// @namespace    https://github.com/0x1b2c/chatgpt-exporter
 // @version      3.1.0
 // @description  Export your ChatGPT, Claude, Copilot, Gemini or Grok chat into a properly and elegantly formatted Markdown or JSON.
 // @author       Mic Mejia (Refactored by Google Gemini)
-// @homepage     https://github.com/micmejia
+// @homepage     https://github.com/0x1b2c/ai-chat-exporter
+// @supportURL   https://github.com/0x1b2c/ai-chat-exporter/issues
+// @downloadURL  https://raw.githubusercontent.com/0x1b2c/ai-chat-exporter/master/ai-chat-exporter.user.js
+// @updateURL    https://raw.githubusercontent.com/0x1b2c/ai-chat-exporter/master/ai-chat-exporter.user.js
 // @license      MIT License
 // @match        https://chat.openai.com/*
 // @match        https://chatgpt.com/*
