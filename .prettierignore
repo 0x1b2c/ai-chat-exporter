@@ -1,0 +1,17 @@
+# Images
+images/
+
+# Reference HTML files (DOM structures)
+reference-html-dom/
+
+# Other non-JS files
+LICENSE
+CHANGELOG.md
+README.md
+*.md
+
+# Git and Config files
+.git/
+.gitignore
+.cz.toml
+.prettierrc

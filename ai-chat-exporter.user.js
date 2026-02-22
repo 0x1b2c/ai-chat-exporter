@@ -46,10 +46,7 @@
   const DEFAULT_CHAT_TITLE_PREFIX = "✓ ";
 
   GM_registerMenuCommand("Set Gemini Chat Title Prefix", () => {
-    const currentPrefix = GM_getValue(
-      GM_CONTROLS_CHAT_TITLE_PREFIX,
-      DEFAULT_CHAT_TITLE_PREFIX
-    );
+    const currentPrefix = GM_getValue(GM_CONTROLS_CHAT_TITLE_PREFIX, DEFAULT_CHAT_TITLE_PREFIX);
     const newPrefix = prompt(
       "Enter the prefix you want to use: \n" +
         "You only need to set this if you use the 'Set Gemini Chat Title Prefix' Tampermonkey script.",
@@ -57,16 +54,13 @@
     );
     if (newPrefix !== null && newPrefix !== currentPrefix) {
       GM_setValue(GM_CONTROLS_CHAT_TITLE_PREFIX, newPrefix);
-      alert(
-        `Prefix updated to "${newPrefix}". Please refresh page to apply to future exports.`
-      );
+      alert(`Prefix updated to "${newPrefix}". Please refresh page to apply to future exports.`);
     }
   });
 
   // --- 1. Horizontal Position Command ---
   GM_registerMenuCommand("Set Horizontal Position", () => {
-    const screenWidth =
-      document.documentElement.clientWidth || window.innerWidth || 0;
+    const screenWidth = document.documentElement.clientWidth || window.innerWidth || 0;
     const currentPos = GM_getValue(GM_CONTROLS_HORIZONTAL_POSITION, 20);
 
     const promptMsg =
@@ -89,17 +83,13 @@
       }
 
       GM_setValue(GM_CONTROLS_HORIZONTAL_POSITION, finalVal);
-      if (isValid)
-        alert(
-          `Horizontal position set to ${finalVal}px. Please refresh to apply.`
-        );
+      if (isValid) alert(`Horizontal position set to ${finalVal}px. Please refresh to apply.`);
     }
   });
 
   // --- 2. Vertical Position Command ---
   GM_registerMenuCommand("Set Vertical Position", () => {
-    const screenHeight =
-      document.documentElement.clientHeight || window.innerHeight || 0;
+    const screenHeight = document.documentElement.clientHeight || window.innerHeight || 0;
     const currentPos = GM_getValue(GM_CONTROLS_VERTICAL_POSITION, 20);
 
     const promptMsg =
@@ -122,10 +112,7 @@
       }
 
       GM_setValue(GM_CONTROLS_VERTICAL_POSITION, finalVal);
-      if (isValid)
-        alert(
-          `Vertical position set to ${finalVal}px. Please refresh to apply.`
-        );
+      if (isValid) alert(`Vertical position set to ${finalVal}px. Please refresh to apply.`);
     }
   });
 
@@ -170,8 +157,7 @@
     fontFamily: FONT_STACK,
     display: "flex",
     flexDirection: "column",
-    transition:
-      "max-height 0.3s ease-in-out, padding 0.3s ease-in-out, opacity 0.3s ease-in-out",
+    transition: "max-height 0.3s ease-in-out, padding 0.3s ease-in-out, opacity 0.3s ease-in-out",
     opacity: "1",
     transformOrigin: "bottom right",
   };
@@ -343,8 +329,7 @@
   const GEMINI_MESSAGE_ITEM_SELECTOR = "user-query, model-response";
   const GEMINI_SIDEBAR_ACTIVE_CHAT_SELECTOR =
     'a[data-test-id="conversation"].selected .conversation-title';
-  const GEMINI_TOPBAR_ACTIVE_CHAT_SELECTOR =
-    "conversation-actions .conversation-title";
+  const GEMINI_TOPBAR_ACTIVE_CHAT_SELECTOR = "conversation-actions .conversation-title";
 
   const CLAUDE = "claude";
   const CLAUDE_HOSTNAMES = ["claude.ai"];
@@ -429,10 +414,8 @@
 
         const rule = this.rules.find(
           (r) =>
-            (typeof r.filter === "string" &&
-              r.filter === node.nodeName.toLowerCase()) ||
-            (Array.isArray(r.filter) &&
-              r.filter.includes(node.nodeName.toLowerCase())) ||
+            (typeof r.filter === "string" && r.filter === node.nodeName.toLowerCase()) ||
+            (Array.isArray(r.filter) && r.filter.includes(node.nodeName.toLowerCase())) ||
             (typeof r.filter === "function" && r.filter(node))
         );
 
@@ -572,25 +555,18 @@
       // Add individual tags (tag1 to tag9)
       for (let i = 0; i < 9; i++) {
         const tagName = `{tag${i + 1}}`;
-        replacements[tagName] = tagsArray[i]
-          ? tagsArray[i].toLocaleLowerCase()
-          : ""; // Use tag if it exists, otherwise empty string
+        replacements[tagName] = tagsArray[i] ? tagsArray[i].toLocaleLowerCase() : ""; // Use tag if it exists, otherwise empty string
       }
 
       let formattedFilename = format;
       for (const placeholder in replacements) {
         if (replacements.hasOwnProperty(placeholder)) {
           // Replace all occurrences of the placeholder with its value
-          formattedFilename = formattedFilename
-            .split(placeholder)
-            .join(replacements[placeholder]);
+          formattedFilename = formattedFilename.split(placeholder).join(replacements[placeholder]);
         }
       }
 
-      return Utils.slugify(
-        `${formattedFilename.replace(/(_+|-+)$/, "")}.${ext}`,
-        false
-      );
+      return Utils.slugify(`${formattedFilename.replace(/(_+|-+)$/, "")}.${ext}`, false);
     },
 
     /**
@@ -665,27 +641,20 @@
       const articles = [...doc.querySelectorAll(CHATGPT_ARTICLE_SELECTOR)];
       if (articles.length === 0) return null;
 
-      let title =
-        doc.title.replace(CHATGPT_TITLE_REPLACE_TEXT, "").trim() ||
-        DEFAULT_CHAT_TITLE;
+      let title = doc.title.replace(CHATGPT_TITLE_REPLACE_TEXT, "").trim() || DEFAULT_CHAT_TITLE;
       const messages = [];
       let chatIndex = 1;
 
       for (const article of articles) {
         const turnType = article.getAttribute("data-turn");
-        const header =
-          article.querySelector(CHATGPT_HEADER_SELECTOR)?.textContent?.trim() ||
-          "";
+        const header = article.querySelector(CHATGPT_HEADER_SELECTOR)?.textContent?.trim() || "";
 
         const isUser =
-          turnType === "user" ||
-          header.toLowerCase().includes(CHATGPT_USER_MESSAGE_INDICATOR);
+          turnType === "user" || header.toLowerCase().includes(CHATGPT_USER_MESSAGE_INDICATOR);
         const author = isUser ? "user" : "ai";
 
         // CRITICAL FIX: Target exactly the content container to ignore action buttons
-        const contentTarget = article.querySelector(
-          ".markdown, .whitespace-pre-wrap"
-        );
+        const contentTarget = article.querySelector(".markdown, .whitespace-pre-wrap");
         const contentHtml = contentTarget || article;
 
         const contentText = contentHtml.innerText.trim();
@@ -754,12 +723,9 @@
           // For Claude messages, we need to filter out "thinking" blocks
           const claudeResponseContent = document.createElement("div");
           Array.from(item.children).forEach((child) => {
-            const isThinkingBlock = child.className.includes(
-              CLAUDE_THINKING_BLOCK_CLASS
-            );
+            const isThinkingBlock = child.className.includes(CLAUDE_THINKING_BLOCK_CLASS);
             const isArtifactBlock =
-              (child.className.includes("pt-3") &&
-                child.className.includes("pb-3")) ||
+              (child.className.includes("pt-3") && child.className.includes("pb-3")) ||
               child.querySelector(CLAUDE_ARTIFACT_BLOCK_CELL);
 
             // Only consider non-thinking, non-artifact blocks
@@ -821,17 +787,11 @@
       let chatIndex = 1;
 
       let rawTitle = "";
-      const selected = doc.querySelector(
-        '[role="option"][aria-selected="true"]'
-      );
+      const selected = doc.querySelector('[role="option"][aria-selected="true"]');
       if (selected) {
         rawTitle =
           selected.querySelector("p")?.textContent.trim() ||
-          (selected.getAttribute("aria-label") || "")
-            .split(",")
-            .slice(1)
-            .join(",")
-            .trim();
+          (selected.getAttribute("aria-label") || "").split(",").slice(1).join(",").trim();
       }
       if (!rawTitle) {
         rawTitle = (doc.title || "")
@@ -859,9 +819,7 @@
         messages.push({
           id: messageId,
           author: author,
-          contentHtml: isUser
-            ? messageContentElem
-            : messageContentElem.cloneNode(true),
+          contentHtml: isUser ? messageContentElem : messageContentElem.cloneNode(true),
           contentText: messageContentElem.innerText.trim(),
           timestamp: new Date(),
           originalIndex: chatIndex,
@@ -891,29 +849,20 @@
      * @returns {object|null} The standardized chat data, or null.
      */
     extractGeminiChatData(doc) {
-      const messageItems = [
-        ...doc.querySelectorAll(GEMINI_MESSAGE_ITEM_SELECTOR),
-      ];
+      const messageItems = [...doc.querySelectorAll(GEMINI_MESSAGE_ITEM_SELECTOR)];
       if (messageItems.length === 0) return null;
 
       let title = DEFAULT_CHAT_TITLE;
 
       // 1. Prioritize title from sidebar if available and not generic
-      const sidebarActiveChatItem = doc.querySelector(
-        GEMINI_SIDEBAR_ACTIVE_CHAT_SELECTOR
-      );
+      const sidebarActiveChatItem = doc.querySelector(GEMINI_SIDEBAR_ACTIVE_CHAT_SELECTOR);
 
       // 2. Fallback to topbar title
-      const topbarActiveChatItem = doc.querySelector(
-        GEMINI_TOPBAR_ACTIVE_CHAT_SELECTOR
-      );
+      const topbarActiveChatItem = doc.querySelector(GEMINI_TOPBAR_ACTIVE_CHAT_SELECTOR);
 
       if (sidebarActiveChatItem && sidebarActiveChatItem.textContent.trim()) {
         title = sidebarActiveChatItem.textContent.trim();
-      } else if (
-        topbarActiveChatItem &&
-        topbarActiveChatItem.textContent.trim()
-      ) {
+      } else if (topbarActiveChatItem && topbarActiveChatItem.textContent.trim()) {
         title = topbarActiveChatItem.textContent.trim();
       } else {
         title = doc.title;
@@ -934,9 +883,7 @@
 
       if (configuredPrefix && title.startsWith(configuredPrefix.trim())) {
         // Escape prefix for regex safety (handles characters like [, *, +, etc.)
-        const escapedPrefix = configuredPrefix
-          .trim()
-          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const escapedPrefix = configuredPrefix.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const prefixRegex = new RegExp(`^${escapedPrefix}\\s*`);
         title = title.replace(prefixRegex, "").trim();
       }
@@ -969,9 +916,7 @@
           id: messageId, // Unique ID
           author: author,
           contentHtml: messageContentElem, // Store the direct DOM Element
-          contentText: messageContentElem.innerText
-            .replace(/^you said\s+/i, "")
-            .trim(),
+          contentText: messageContentElem.innerText.replace(/^you said\s+/i, "").trim(),
           timestamp: new Date(),
           originalIndex: chatIndex, // Keep original index for outline
         });
@@ -980,22 +925,14 @@
       }
 
       // Final fallback to the first user message if title is still default
-      if (
-        title === DEFAULT_CHAT_TITLE &&
-        messages.length > 0 &&
-        messages[0].author === "user"
-      ) {
+      if (title === DEFAULT_CHAT_TITLE && messages.length > 0 && messages[0].author === "user") {
         const firstUserMessage = messages[0].contentText;
-        const words = firstUserMessage
-          .split(/\s+/)
-          .filter((word) => word.length > 0);
+        const words = firstUserMessage.split(/\s+/).filter((word) => word.length > 0);
         if (words.length > 0) {
           let generatedTitle = words.slice(0, 7).join(" ");
           generatedTitle = generatedTitle.replace(/[,.;:!?\-+]$/, "").trim();
           if (generatedTitle.length < 5 && words.length > 1) {
-            generatedTitle = words
-              .slice(0, Math.min(words.length, 10))
-              .join(" ");
+            generatedTitle = words.slice(0, Math.min(words.length, 10)).join(" ");
             generatedTitle = generatedTitle.replace(/[,.;:!?\-+]$/, "").trim();
           }
           title = generatedTitle || DEFAULT_CHAT_TITLE;
@@ -1043,16 +980,13 @@
         // but the full .message-bubble for HTML conversion (so code blocks are included).
         const textSourceElem = isUser
           ? messageContentElem
-          : item.querySelector(".response-content-markdown") ||
-            messageContentElem;
+          : item.querySelector(".response-content-markdown") || messageContentElem;
 
         const messageId = `${author}-${chatIndex}-${Date.now()}-${Math.random()
           .toString(36)
           .substring(2, 9)}`;
 
-        const clonedContent = isUser
-          ? messageContentElem
-          : messageContentElem.cloneNode(true);
+        const clonedContent = isUser ? messageContentElem : messageContentElem.cloneNode(true);
         const cbInClone = clonedContent.querySelectorAll
           ? clonedContent.querySelectorAll('[data-testid="code-block"]')
           : [];
@@ -1099,26 +1033,16 @@
       chatData.messages.forEach((msg) => {
         if (msg.author === "user") {
           exportChatIndex++; // Increment only for user messages
-          const preview = Utils.truncate(
-            msg.contentText.replace(/\s+/g, " "),
-            70
-          );
-          toc += `- [${exportChatIndex}: ${Utils.escapeMd(
-            preview
-          )}](#chat-${exportChatIndex})\n`;
+          const preview = Utils.truncate(msg.contentText.replace(/\s+/g, " "), 70);
+          toc += `- [${exportChatIndex}: ${Utils.escapeMd(preview)}](#chat-${exportChatIndex})\n`;
           content +=
-            `## chat-${exportChatIndex}\n\n> ` +
-            msg.contentText.replace(/\n/g, "\n> ") +
-            "\n\n";
+            `## chat-${exportChatIndex}\n\n> ` + msg.contentText.replace(/\n/g, "\n> ") + "\n\n";
         } else {
           let markdownContent;
           try {
             markdownContent = turndownServiceInstance.turndown(msg.contentHtml);
           } catch (e) {
-            console.error(
-              `Error converting AI message ${msg.id} to Markdown:`,
-              e
-            );
+            console.error(`Error converting AI message ${msg.id} to Markdown:`, e);
             markdownContent = `[CONVERSION ERROR: Failed to render this section. Original content below]\n\n\`\`\`\n${msg.contentText}\n\`\`\`\n`;
           }
           content += markdownContent + "\n\n" + MARKDOWN_BACK_TO_TOP_LINK;
@@ -1131,17 +1055,12 @@
       const yaml = `---\ntitle: "${chatData.title.replaceAll(
         '"',
         '\\"'
-      )}"\ntags: [${chatData.tags.join(", ")}]\nauthor: ${
-        chatData.author
-      }\ncount: ${
+      )}"\ntags: [${chatData.tags.join(", ")}]\nauthor: ${chatData.author}\ncount: ${
         chatData.messageCount
-      }\nexporter: ${EXPORTER_VERSION}\ndate: ${localTime}\nurl: ${
-        chatData.threadUrl
-      }\n---\n`;
+      }\nexporter: ${EXPORTER_VERSION}\ndate: ${localTime}\nurl: ${chatData.threadUrl}\n---\n`;
       const tocBlock = `## Table of Contents\n\n${toc.trim()}\n\n`;
 
-      const finalOutput =
-        yaml + `\n# ${chatData.title}\n\n` + tocBlock + content.trim() + "\n\n";
+      const finalOutput = yaml + `\n# ${chatData.title}\n\n` + tocBlock + content.trim() + "\n\n";
 
       const fileName = Utils.formatFileName(
         GM_getValue(GM_OUTPUT_FILE_FORMAT, OUTPUT_FILE_FORMAT_DEFAULT),
@@ -1168,10 +1087,7 @@
           try {
             markdownContent = turndownServiceInstance.turndown(msg.contentHtml);
           } catch (e) {
-            console.error(
-              `Error converting AI message ${msg.id} to Markdown:`,
-              e
-            );
+            console.error(`Error converting AI message ${msg.id} to Markdown:`, e);
             markdownContent = `[CONVERSION ERROR: Failed to render this section.]: ${msg.contentText}`;
           }
           return markdownContent;
@@ -1231,8 +1147,7 @@
 
       if (CURRENT_PLATFORM === COPILOT) {
         turndownServiceInstance.addRule("copilotRemoveReactions", {
-          filter: (node) =>
-            node.matches('[data-testid="message-item-reactions"]'),
+          filter: (node) => node.matches('[data-testid="message-item-reactions"]'),
           replacement: () => "",
         });
 
@@ -1250,17 +1165,11 @@
           },
           replacement: function (content, node) {
             // Get the language from the span inside the first child div.
-            const languageNode = node.querySelector(
-              ":scope > div:nth-child(1) span"
-            );
-            const language = languageNode
-              ? languageNode.textContent.trim().toLowerCase()
-              : "";
+            const languageNode = node.querySelector(":scope > div:nth-child(1) span");
+            const language = languageNode ? languageNode.textContent.trim().toLowerCase() : "";
 
             // Get the code content from the pre > code element within the second child div.
-            const codeNode = node.querySelector(
-              ":scope > div:nth-child(2) > div > pre > code"
-            );
+            const codeNode = node.querySelector(":scope > div:nth-child(2) > div > pre > code");
             if (!codeNode) return "";
 
             const codeText = codeNode.textContent || "";
@@ -1283,9 +1192,7 @@
           replacement: function (content, node) {
             // Get the link text from last span.
             const lastSpan = node.querySelector(":scope > span:nth-child(3)");
-            const linkText = lastSpan
-              ? lastSpan.textContent.trim()
-              : node.getAttribute("href");
+            const linkText = lastSpan ? lastSpan.textContent.trim() : node.getAttribute("href");
 
             return `[${linkText}](${node.getAttribute("href")}) `;
           },
@@ -1367,17 +1274,11 @@
           },
           replacement: function (content, node) {
             // Get the language from the second child div.
-            const languageNode = node.querySelector(
-              ":scope > div:nth-child(2)"
-            );
-            const language = languageNode
-              ? languageNode.textContent.trim().toLowerCase()
-              : "";
+            const languageNode = node.querySelector(":scope > div:nth-child(2)");
+            const language = languageNode ? languageNode.textContent.trim().toLowerCase() : "";
 
             // Get the code content from the pre > code element within the third child div.
-            const codeNode = node.querySelector(
-              ":scope > div:nth-child(3) > pre > code"
-            );
+            const codeNode = node.querySelector(":scope > div:nth-child(3) > pre > code");
             if (!codeNode) return "";
 
             const codeText = codeNode.textContent || "";
@@ -1392,8 +1293,7 @@
         turndownServiceInstance.addRule("grokPreserveNewlines", {
           filter: (node) => {
             return (
-              node.nodeName === "P" &&
-              node.getAttribute("style")?.includes("white-space: pre-wrap")
+              node.nodeName === "P" && node.getAttribute("style")?.includes("white-space: pre-wrap")
             );
           },
           replacement: (content) => {
@@ -1405,16 +1305,11 @@
 
         turndownServiceInstance.addRule("grokCodeBlock", {
           filter: function (node) {
-            return (
-              node.nodeName === "DIV" &&
-              node.getAttribute("data-testid") === "code-block"
-            );
+            return node.nodeName === "DIV" && node.getAttribute("data-testid") === "code-block";
           },
           replacement: function (content, node) {
             const langSpan = node.querySelector(".font-mono.text-xs");
-            const rawLang = langSpan
-              ? langSpan.textContent.trim().toLowerCase()
-              : "";
+            const rawLang = langSpan ? langSpan.textContent.trim().toLowerCase() : "";
             const lang = rawLang === "text" ? "" : rawLang;
 
             // Case 1: <pre> was rendered and the pre rule already produced
@@ -1452,10 +1347,7 @@
           if (node.parentNode.nodeName === "PRE") return content;
 
           // Prevent wrapping in single backticks if the code is inside a Grok code block
-          if (
-            typeof CURRENT_PLATFORM !== "undefined" &&
-            CURRENT_PLATFORM === GROK
-          ) {
+          if (typeof CURRENT_PLATFORM !== "undefined" && CURRENT_PLATFORM === GROK) {
             if (node.closest && node.closest('[data-testid="code-block"]')) {
               return content;
             }
@@ -1473,10 +1365,7 @@
           let codeText = "";
 
           // 1. GEMINI STRICT ISOLATION
-          if (
-            typeof CURRENT_PLATFORM !== "undefined" &&
-            CURRENT_PLATFORM === GEMINI
-          ) {
+          if (typeof CURRENT_PLATFORM !== "undefined" && CURRENT_PLATFORM === GEMINI) {
             const geminiCodeBlockParent = node.closest(".code-block");
             if (geminiCodeBlockParent) {
               const geminiLanguageSpan = geminiCodeBlockParent.querySelector(
@@ -1489,10 +1378,7 @@
           }
 
           // 2. CHATGPT STRICT ISOLATION (Optimized for CodeMirror 6)
-          if (
-            typeof CURRENT_PLATFORM !== "undefined" &&
-            CURRENT_PLATFORM === CHATGPT
-          ) {
+          if (typeof CURRENT_PLATFORM !== "undefined" && CURRENT_PLATFORM === CHATGPT) {
             const chatgptLanguageDiv = node.querySelector(
               ".text-token-text-primary, .flex.items-center.text-token-text-secondary, .text-xs.font-sans"
             );
@@ -1500,9 +1386,7 @@
               const firstSpan = chatgptLanguageDiv.querySelector("span");
               lang = firstSpan
                 ? firstSpan.textContent.trim()
-                : chatgptLanguageDiv.textContent
-                    .replace(/Copy code|Run/gi, "")
-                    .trim();
+                : chatgptLanguageDiv.textContent.replace(/Copy code|Run/gi, "").trim();
             }
 
             const cmContent = node.querySelector(".cm-content");
@@ -1569,8 +1453,7 @@
 
       turndownServiceInstance.addRule("link", {
         filter: "a",
-        replacement: (content, node) =>
-          `[${content}](${node.getAttribute("href")})`,
+        replacement: (content, node) => `[${content}](${node.getAttribute("href")})`,
       });
 
       turndownServiceInstance.addRule("strikethrough", {
@@ -1590,9 +1473,7 @@
 
           const getRowCellsContent = (rowElement) => {
             const cells = Array.from(rowElement.querySelectorAll("th, td"));
-            return cells.map((cell) =>
-              cell.textContent.replace(/\s+/g, " ").trim()
-            );
+            return cells.map((cell) => cell.textContent.replace(/\s+/g, " ").trim());
           };
 
           if (headerRows.length > 0) {
@@ -1634,8 +1515,7 @@
             for (let i = 0; i < paddedRows.length; i++) {
               markdownTable += "| " + paddedRows[i].join(" | ") + " |\n";
               if (i === 0) {
-                markdownTable +=
-                  "|" + Array(maxCols).fill("---").join("|") + "|\n";
+                markdownTable += "|" + Array(maxCols).fill("---").join("|") + "|\n";
               }
             }
           }
@@ -1671,8 +1551,7 @@
       if (CURRENT_PLATFORM === CHATGPT) {
         turndownServiceInstance.addRule("popup-div", {
           filter: (node) =>
-            node.nodeName === "DIV" &&
-            node.classList.contains(CHATGPT_POPUP_DIV_CLASS),
+            node.nodeName === "DIV" && node.classList.contains(CHATGPT_POPUP_DIV_CLASS),
           replacement: (content) => {
             // Convert HTML content of popups to a code block
             const textWithLineBreaks = content
@@ -1686,10 +1565,8 @@
         });
         turndownServiceInstance.addRule("buttonWithSpecificClass", {
           filter: (node) =>
-            node.nodeName === "BUTTON" &&
-            node.classList.contains(CHATGPT_BUTTON_SPECIFIC_CLASS),
-          replacement: (content) =>
-            content.trim() ? `__${content}__\n\n` : "",
+            node.nodeName === "BUTTON" && node.classList.contains(CHATGPT_BUTTON_SPECIFIC_CLASS),
+          replacement: (content) => (content.trim() ? `__${content}__\n\n` : ""),
         });
         // turndownServiceInstance.addRule("remove-img", {
         //   filter: "img",
@@ -1751,9 +1628,7 @@
 
       // --- Refresh ChatExporter._selectedMessageIds from current UI state and visibility ---
       ChatExporter._selectedMessageIds.clear(); // Clear previous state
-      const outlineContainer = document.querySelector(
-        `#${OUTLINE_CONTAINER_ID}`
-      );
+      const outlineContainer = document.querySelector(`#${OUTLINE_CONTAINER_ID}`);
       if (outlineContainer) {
         // Only consider checkboxes that are checked AND visible
         const checkedVisibleCheckboxes = outlineContainer.querySelectorAll(
@@ -1794,10 +1669,7 @@
                 break;
               }
             }
-            if (
-              prevUserMessageId &&
-              visibleUserMessageIds.has(prevUserMessageId)
-            ) {
+            if (prevUserMessageId && visibleUserMessageIds.has(prevUserMessageId)) {
               ChatExporter._selectedMessageIds.add(msg.id);
             }
           }
@@ -1834,8 +1706,7 @@
           )
           .filter((tag) => tag.length > 0),
         messages: filteredMessages,
-        messageCount: filteredMessages.filter((m) => m.author === "user")
-          .length,
+        messageCount: filteredMessages.filter((m) => m.author === "user").length,
         exportedAt: new Date(), // Set current timestamp just before export
       };
 
@@ -1857,10 +1728,7 @@
         mimeType = "text/markdown;charset=utf-8";
       } else if (format === "json") {
         // Pass the filtered chat data to formatToJSON
-        const jsonResult = ChatExporter.formatToJSON(
-          chatDataForExport,
-          turndownServiceInstance
-        );
+        const jsonResult = ChatExporter.formatToJSON(chatDataForExport, turndownServiceInstance);
         fileOutput = jsonResult.output;
         fileName = jsonResult.fileName;
         mimeType = "application/json;charset=utf-8";
@@ -1957,9 +1825,7 @@
         // Check state; default to true if undefined
         const isEnabled = UIManager.autoScrollEnabled !== false;
         scrollStatus.textContent = isEnabled ? "⬆️ ON" : "⬆️ OFF";
-        scrollStatus.title = `Auto-scroll is ${
-          isEnabled ? "ON" : "OFF"
-        } (Press ALT+A to toggle)`;
+        scrollStatus.title = `Auto-scroll is ${isEnabled ? "ON" : "OFF"} (Press ALT+A to toggle)`;
 
         Utils.applyStyles(scrollStatus, {
           marginRight: "10px",
@@ -2009,10 +1875,7 @@
         ...BUTTON_SPACING_PROPS,
       });
       settingsButton.addEventListener("click", () => {
-        const currentFormat = GM_getValue(
-          GM_OUTPUT_FILE_FORMAT,
-          OUTPUT_FILE_FORMAT_DEFAULT
-        );
+        const currentFormat = GM_getValue(GM_OUTPUT_FILE_FORMAT, OUTPUT_FILE_FORMAT_DEFAULT);
         const newFormat = window.prompt(
           `+++++++  ${EXPORT_BUTTON_TITLE_PREFIX}  +++++++\n\n ` +
             `ENTER NEW FILENAME FORMAT:\n` +
@@ -2070,9 +1933,7 @@
      * This function should be called whenever the chat data changes.
      */
     generateOutlineContent() {
-      const outlineContainer = document.querySelector(
-        `#${OUTLINE_CONTAINER_ID}`
-      );
+      const outlineContainer = document.querySelector(`#${OUTLINE_CONTAINER_ID}`);
       if (!outlineContainer) return;
 
       // Extract fresh chat data
@@ -2105,12 +1966,10 @@
         !ChatExporter._currentChatData || // No previous data
         !freshChatData || // No new data
         freshChatData._raw_title !== ChatExporter._currentChatData._raw_title ||
-        freshChatData.messages.length !==
-          ChatExporter._currentChatData.messages.length ||
+        freshChatData.messages.length !== ChatExporter._currentChatData.messages.length ||
         (freshChatData.messages.length > 0 &&
           ChatExporter._currentChatData.messages.length > 0 &&
-          freshChatData.messages[freshChatData.messages.length - 1]
-            .contentText !==
+          freshChatData.messages[freshChatData.messages.length - 1].contentText !==
             ChatExporter._currentChatData.messages[
               ChatExporter._currentChatData.messages.length - 1
             ].contentText);
@@ -2126,10 +1985,7 @@
       ChatExporter._currentChatData = freshChatData;
 
       // Hide if no messages after update
-      if (
-        !ChatExporter._currentChatData ||
-        ChatExporter._currentChatData.messages.length === 0
-      ) {
+      if (!ChatExporter._currentChatData || ChatExporter._currentChatData.messages.length === 0) {
         outlineContainer.style.display = "none";
         return;
       } else {
@@ -2190,8 +2046,7 @@
       const searchInput = document.createElement("input");
       searchInput.type = "text";
       searchInput.id = "outline-search-input";
-      searchInput.placeholder =
-        "Search text or regex in user queries & AI responses.";
+      searchInput.placeholder = "Search text or regex in user queries & AI responses.";
       Utils.applyStyles(searchInput, SEARCH_INPUT_PROPS);
       outlineContainer.appendChild(searchInput);
 
@@ -2203,8 +2058,7 @@
       outlineContainer.appendChild(noMatchMessage);
 
       const hr = document.createElement("hr"); // Horizontal rule
-      hr.style.cssText =
-        "border: none; border-top: 1px solid #eee; margin: 5px 0;";
+      hr.style.cssText = "border: none; border-top: 1px solid #eee; margin: 5px 0;";
       outlineContainer.appendChild(hr);
 
       // List of messages
@@ -2220,9 +2074,7 @@
 
         // Only count if the outline is not collapsed
         if (!UIManager._outlineIsCollapsed) {
-          const allCheckboxes = outlineContainer.querySelectorAll(
-            ".outline-item-checkbox"
-          );
+          const allCheckboxes = outlineContainer.querySelectorAll(".outline-item-checkbox");
           allCheckboxes.forEach((checkbox) => {
             // Check if the checkbox is checked AND its parent div is visible due to search filter
             const parentItemDiv = checkbox.closest("div");
@@ -2243,16 +2095,10 @@
 
         // Create a strong element for bold text
         const strongElement = document.createElement("strong");
-        strongElement.appendChild(
-          document.createTextNode("Items to export:  ")
-        );
-        strongElement.appendChild(
-          document.createTextNode(selectedAndVisibleMessages.toString())
-        );
+        strongElement.appendChild(document.createTextNode("Items to export:  "));
+        strongElement.appendChild(document.createTextNode(selectedAndVisibleMessages.toString()));
         strongElement.appendChild(document.createTextNode(" out of "));
-        strongElement.appendChild(
-          document.createTextNode(totalUserMessages.toString())
-        );
+        strongElement.appendChild(document.createTextNode(totalUserMessages.toString()));
 
         selectAllLabel.appendChild(strongElement);
       };
@@ -2280,19 +2126,14 @@
                 ".outline-item-checkbox:not([style*='display: none'])"
               )
             );
-            const allVisibleChecked = allVisibleCheckboxes.every(
-              (cb) => cb.checked
-            );
+            const allVisibleChecked = allVisibleCheckboxes.every((cb) => cb.checked);
             masterCheckbox.checked = allVisibleChecked;
             updateSelectedCountDisplay(); // Update count on individual checkbox change
           };
           itemDiv.appendChild(checkbox);
 
           const itemText = document.createElement("span");
-          itemText.textContent = `${userQuestionCount}: ${Utils.truncate(
-            msg.contentText,
-            40
-          )}`; // Truncate to 40
+          itemText.textContent = `${userQuestionCount}: ${Utils.truncate(msg.contentText, 40)}`; // Truncate to 40
           itemText.style.cursor = "pointer"; // Set cursor to hand
           itemText.style.textDecoration = "none"; // Remove underline
           itemText.title = `${userQuestionCount}: ${Utils.truncate(
@@ -2334,14 +2175,9 @@
           // For AI responses, if they follow a selected user message, also add them to selected IDs
           // This is a pre-population, actual selection is determined on export.
           const prevUserMessage = ChatExporter._currentChatData.messages.find(
-            (m, i) =>
-              i < ChatExporter._currentChatData.messages.indexOf(msg) &&
-              m.author === "user"
+            (m, i) => i < ChatExporter._currentChatData.messages.indexOf(msg) && m.author === "user"
           );
-          if (
-            prevUserMessage &&
-            ChatExporter._selectedMessageIds.has(prevUserMessage.id)
-          ) {
+          if (prevUserMessage && ChatExporter._selectedMessageIds.has(prevUserMessage.id)) {
             ChatExporter._selectedMessageIds.add(msg.id);
           }
         }
@@ -2431,10 +2267,7 @@
               match = true; // If search box is empty, consider it a match (show all)
             } else if (searchRegex) {
               // Use regex.test() for matching against content
-              if (
-                searchRegex.test(userContent) ||
-                searchRegex.test(aiContent)
-              ) {
+              if (searchRegex.test(userContent) || searchRegex.test(aiContent)) {
                 match = true;
               }
             }
@@ -2466,8 +2299,7 @@
           ".outline-item-checkbox:not([style*='display: none'])"
         );
         const allVisibleChecked =
-          visibleCheckboxes.length > 0 &&
-          Array.from(visibleCheckboxes).every((cb) => cb.checked);
+          visibleCheckboxes.length > 0 && Array.from(visibleCheckboxes).every((cb) => cb.checked);
         masterCheckbox.checked = allVisibleChecked;
         updateSelectedCountDisplay();
       };
@@ -2496,22 +2328,13 @@
     toggleOutlineCollapse() {
       UIManager._outlineIsCollapsed = !UIManager._outlineIsCollapsed;
       // New: Save the new state to localStorage
-      localStorage.setItem(
-        OUTLINE_COLLAPSED_STATE_KEY,
-        UIManager._outlineIsCollapsed.toString()
-      );
+      localStorage.setItem(OUTLINE_COLLAPSED_STATE_KEY, UIManager._outlineIsCollapsed.toString());
 
-      const outlineContainer = document.querySelector(
-        `#${OUTLINE_CONTAINER_ID}`
-      );
+      const outlineContainer = document.querySelector(`#${OUTLINE_CONTAINER_ID}`);
       const titleDiv = document.querySelector(`#${OUTLINE_TITLE_ID}`);
-      const selectAllContainer = document.querySelector(
-        "#outline-select-all-container"
-      );
+      const selectAllContainer = document.querySelector("#outline-select-all-container");
       const searchInput = document.querySelector("#outline-search-input");
-      const noMatchMessage = document.querySelector(
-        "#outline-no-match-message"
-      );
+      const noMatchMessage = document.querySelector("#outline-no-match-message");
       const hr = outlineContainer.querySelector("hr");
       const messageListDiv = document.querySelector("#outline-message-list");
       const toggleButton = document.querySelector("#outline-toggle-btn");
@@ -2536,17 +2359,13 @@
         // noMatchMessage and messageListDiv display depend on search state, not just collapse
         if (hr) hr.style.display = "block";
         // Trigger a re-evaluation of search filter if it was active
-        const currentSearchText = searchInput
-          ? searchInput.value.toLowerCase().trim()
-          : "";
+        const currentSearchText = searchInput ? searchInput.value.toLowerCase().trim() : "";
         if (currentSearchText !== "") {
           searchInput.dispatchEvent(new Event("input")); // Re-run search filter
         } else {
           // If no search text, ensure all messages are visible
           if (messageListDiv) messageListDiv.style.display = "block";
-          const allItems = outlineContainer.querySelectorAll(
-            ".outline-item-checkbox"
-          );
+          const allItems = outlineContainer.querySelectorAll(".outline-item-checkbox");
           allItems.forEach((cb) => {
             const parentDiv = cb.closest("div");
             if (parentDiv) parentDiv.style.display = "flex";
@@ -2576,9 +2395,7 @@
       // UIManager._lastProcessedChatUrl will be null initially, or explicitly reset by handleUrlChange for new URLs.
       // It will be set to currentUrl *after* the initial message element is found.
       if (UIManager._lastProcessedChatUrl === currentUrl) {
-        console.log(
-          "Auto-scroll already initiated or completed for this URL. Skipping."
-        );
+        console.log("Auto-scroll already initiated or completed for this URL. Skipping.");
         return;
       }
 
@@ -2635,10 +2452,7 @@
         return new Promise((resolve) => {
           const interval = setInterval(() => {
             const element = document.querySelector(selector);
-            if (
-              !element ||
-              (element.offsetWidth === 0 && element.offsetHeight === 0)
-            ) {
+            if (!element || (element.offsetWidth === 0 && element.offsetHeight === 0)) {
               clearInterval(interval);
               resolve(true);
             } else if (Date.now() - startTime > timeoutMs) {
@@ -2662,9 +2476,7 @@
 
       if (!initialMessageElement) {
         //   "Timeout waiting for chat messages to appear. Auto-scroll cannot proceed."
-        console.error(
-          "Initial chat message elements did not appear within timeout."
-        );
+        console.error("Initial chat message elements did not appear within timeout.");
         // If initial messages don't appear, this URL was not successfully processed for auto-scroll.
         // So, reset _lastProcessedChatUrl to null to allow a retry or a different trigger for this URL.
         UIManager._lastProcessedChatUrl = null; // Add this line
@@ -2718,9 +2530,7 @@
         }
 
         const currentChatData = ChatExporter.extractGeminiChatData(document);
-        const currentMessageCount = currentChatData
-          ? currentChatData.messages.length
-          : 0;
+        const currentMessageCount = currentChatData ? currentChatData.messages.length : 0;
 
         if (currentMessageCount > previousMessageCount) {
           previousMessageCount = currentMessageCount;
@@ -2754,8 +2564,7 @@
       // );
 
       const isGeminiChatUrl =
-        GEMINI_HOSTNAMES.some((host) => newUrl.includes(host)) &&
-        newUrl.includes("/app");
+        GEMINI_HOSTNAMES.some((host) => newUrl.includes(host)) && newUrl.includes("/app");
 
       if (isGeminiChatUrl) {
         // Trigger auto-scroll for valid Gemini chat URLs.
@@ -2763,10 +2572,7 @@
           UIManager.autoScrollToTop();
         }, 100); // Small delay to allow DOM to update before triggering
       } else {
-        console.log(
-          "URL is not a Gemini chat URL. Skipping auto-scroll for:",
-          newUrl
-        );
+        console.log("URL is not a Gemini chat URL. Skipping auto-scroll for:", newUrl);
       }
     },
 
@@ -2789,9 +2595,7 @@
       let targetNode = null;
       switch (CURRENT_PLATFORM) {
         case COPILOT:
-          targetNode =
-            document.querySelector('[data-content="conversation"]') ||
-            document.body;
+          targetNode = document.querySelector('[data-content="conversation"]') || document.body;
           break;
         case GEMINI:
           targetNode = document.querySelector("#__next") || document.body;
@@ -2820,10 +2624,8 @@
               if (
                 newChatData &&
                 ChatExporter._currentChatData &&
-                (newChatData._raw_title !==
-                  ChatExporter._currentChatData._raw_title ||
-                  newChatData.messages.length >
-                    ChatExporter._currentChatData.messages.length)
+                (newChatData._raw_title !== ChatExporter._currentChatData._raw_title ||
+                  newChatData.messages.length > ChatExporter._currentChatData.messages.length)
               ) {
                 UIManager.addOutlineControls(); // Regenerate outline
               }
@@ -2921,16 +2723,11 @@
       UIManager.setupShortcuts();
 
       // New: Read collapsed state from localStorage on init
-      const storedCollapsedState = localStorage.getItem(
-        OUTLINE_COLLAPSED_STATE_KEY
-      );
+      const storedCollapsedState = localStorage.getItem(OUTLINE_COLLAPSED_STATE_KEY);
       UIManager._outlineIsCollapsed = storedCollapsedState === "true";
 
       // Add controls after DOM is ready
-      if (
-        document.readyState === "complete" ||
-        document.readyState === "interactive"
-      ) {
+      if (document.readyState === "complete" || document.readyState === "interactive") {
         // console.log("DOM is ready (complete or interactive). Setting timeout for UI controls.");
         setTimeout(() => {
           // console.log("Timeout elapsed. Adding export and outline controls.");
